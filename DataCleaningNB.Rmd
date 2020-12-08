@@ -29,11 +29,41 @@ p_load(
   text2vec
 )
 
+p_load(reshape2,jsonlite,tidyverse, tm, topicmodels, parallel, tidytext, plotly, widyr,data.table)
+
+
 ```
 
 
 ```{r, Read Data}
-source("DataCleaning.R")
+
+#Parallize this process on 16 threads
+cluster <- makeCluster(4)
+#Export the jsonlite function stream_in to the cluster
+clusterExport(cluster,list("stream_in"))
+#Create an empty list for the dataframe for each file
+import <- list()
+#Run this function on every file in the ./import directory
+import <- parLapply(cluster,list.files(path = "/home/ptrt/FrontPage-ndjson/"),function(file) {
+  #jsonlite function to convert the ndjson file to a dataframe
+  df1 <- stream_in(file(paste0("/home/ptrt/FrontPage-ndjson/",file)))
+  #select which columns to keep
+  df1$paper <- file
+  return(df1)
+})
+#function called from the data.table library
+df1 <- rbindlist(import)
+#Now you can stop the cluster
+stopCluster(cluster)
+
+df1$text <- str_remove_all(df1$text, "[:punct:]")
+df1$text <- str_replace_all(df1$text, "[:digit:]", "")
+
+df1$date <- lubridate::ymd_hms(df1$date)
+
+df1 %>% write_csv("data.csv")
+
+df1 %>% saveRDS("data.rds")
 
 
 ```
@@ -87,23 +117,8 @@ str(full_df)
 
 full_df <- df1 %>% tibble::rowid_to_column( "ID") %>% mutate(ID = as.character(ID))%>% select(c("ID","paper"), "date") %>%  merge(full_df, by = "ID")
 
-full_df %>% write.csv("full_tokenized_data.csv")
 
-full_df %>% saveRDS("full_tokenized_data.rds")
-
-```
-
-```{r}
-# dataframe <- read_csv("full_tokenized_data.csv") %>%
-#   select(c(ID,date,paper,lemma,upos,ner))
-# 
-df <- readRDS("full_tokenized_data.rds") %>% select(c(ID,date,paper,lemma,upos,ner))
-
-```
-
-
-```{r}
-df <- df %>%
+full_df <- full_df%>%
   mutate(
     CoronaStatus = case_when(
       date < ymd("2020-02-26") ~ "Baseline",
@@ -112,14 +127,22 @@ df <- df %>%
     )
   ) %>% 
   drop_na()
+
+full_df %>% write.csv("full_tokenized_data.csv")
+
+full_df %>% saveRDS("full_tokenized_data.rds")
+
 ```
 
 ```{r}
 
-df2 <-
-  df %>% filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
-  anti_join(stop_ord) %>% group_by(ID) %>% mutate(text = glue::glue_collapse(paste(lemma,upos, sep = "_"), " ")) %>% select(c("ID", "date", "paper", "CoronaStatus", "text")) %>% unique()
-
-df2 %>% saveRDS("lemmatizedAndTaggedTexts.rds")
+full_df %>%
+  filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
+  anti_join(stop_ord) %>%
+  group_by(ID) %>%
+  mutate(text = glue::glue_collapse(paste(lemma, upos, sep = "_"), " ")) %>%
+  select(c("ID", "date", "paper", "CoronaStatus", "text")) %>%
+  unique() %>%
+  saveRDS("lemmatizedAndTaggedTexts.rds")
 
 ```
