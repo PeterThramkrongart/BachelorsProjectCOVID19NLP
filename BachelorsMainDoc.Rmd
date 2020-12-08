@@ -278,6 +278,17 @@ return(vocab)}
 ```
 
 ```{r}
+df2 <-
+  df %>% filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
+  anti_join(stop_ord) %>%
+  mutate(lemma = paste(lemma, upos, sep = "_")) %>%
+  group_by(ID) %>%
+  mutate(text = glue::glue_collapse(lemma, " ")) %>% 
+  select(c("ID", "date", "paper", "CoronaStatus", "text")) %>%
+  unique()
+```
+
+```{r}
 baselineVocab <- df2 %>% filter(date < ymd("2020-02-26") ) %>% .$text %>% getVocab()
 outbreakVocab<- df2 %>% filter(date > ymd("2020-02-28") & date < ymd("2020-04-12")) %>% .$text %>% getVocab()
 postOutbreakVocab <- df2 %>% filter( date > ymd("2020-04-12")) %>% .$text %>% getVocab()
@@ -423,9 +434,41 @@ rm(pybaselineLDAvis)
 rm(pyLDAvis)
 rm(pyOutbreakLDAvis)
 rm(test)
+rm(df)
+rm(df2)
+rm(df1)
+rm(full_df)
+rm(
+  cluster,
+  import,
+  outbreakLDA,
+  outbreakVocab,
+  outbreakTidyLDA,
+  outbreakLDAvis,
+  postOutbreakLDA,
+  postOutbreakLDAvis,
+  postOutbreakTidyLDA,
+  postOutbreakVocab,
+  baselineLDA,
+  baselineLDAvis,
+  baselineTidyLDA,
+  baselineVocab,
+  stop_ord,
+  totalVocab,
+  totalLemmas,
+  totalLemmasNames, 
+  textLemmas,
+  textLemmasNames,
+  pybaselineLDAvis,
+  py,
+  pyLDAvis,
+  pyOutbreakLDAvis
+)
 save.image("Bachelor_shiny_app/workspace.RData")
 
 
 sessioninfo::session_info()
+
+
 ```
 

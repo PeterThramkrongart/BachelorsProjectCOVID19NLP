@@ -26,4 +26,6 @@ df1$date <- lubridate::ymd_hms(df1$date)
 
 df1 %>% write_csv("data.csv")
 
+
+
 df1 %>% saveRDS("data.rds")
