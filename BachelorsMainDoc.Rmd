@@ -278,6 +278,8 @@ return(vocab)}
 ```
 
 ```{r}
+stop_ord <- read_csv("custom_stop_words.csv")
+
 df2 <-
   df %>% filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
   anti_join(stop_ord) %>%
@@ -454,7 +456,6 @@ rm(
   baselineTidyLDA,
   baselineVocab,
   stop_ord,
-  totalVocab,
   totalLemmas,
   totalLemmasNames, 
   textLemmas,

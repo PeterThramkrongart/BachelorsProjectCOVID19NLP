@@ -80,6 +80,8 @@ stop_ord <- stop_ord %>% rename(lemma = X1)
 stop_ord <- stop_ord$lemma %>% append(c("Note", "note", "al"))
 
 stop_ord <- as.data.frame(stop_ord) %>% rename(lemma = stop_ord)
+
+stop_ord %>% write_csv("custom_stop_words.csv")
 ```
 
 
