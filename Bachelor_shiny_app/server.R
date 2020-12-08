@@ -23,12 +23,6 @@ p_load(
 load("workspace.RData")
 factor_levels <- levels(as.factor(c("Baseline","Outbreak","PostOutbreak")))
 
-table_df<- df %>%
-    filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
-    anti_join(stop_ord) %>%
-    count(lemma, CoronaStatus) %>%
-    drop_na()
-
 search_and_plot <-
     function(word,
              top_n = 15 ,
@@ -130,17 +124,20 @@ server <- function(input, output, session) {
     # Replace the renderTable() with DT's version
     output$tableBaseline <- DT::renderDataTable({
         table_df %>%
-            filter(n >= 200 & CoronaStatus == "Baseline") %>%
-            arrange(desc(n))
+            filter(CoronaStatus == "Baseline") %>%
+            arrange(desc(n)) %>% 
+            slice_max(n, n = 1000 )
     })
     output$tableOutbreak <- DT::renderDataTable({
         table_df %>%
-            filter(n >= 200 & CoronaStatus == "Outbreak") %>%
-            arrange(desc(n))
+            filter( CoronaStatus == "Outbreak") %>%
+            arrange(desc(n))%>% 
+            slice_max(n, n = 1000 )
     })
     output$tablePostOutbreak <- DT::renderDataTable({
         table_df %>% 
-            filter(n >= 500 & CoronaStatus == "PostOutbreak") %>%
-            arrange(desc(n))
+            filter( CoronaStatus == "PostOutbreak") %>%
+            arrange(desc(n))%>% 
+            slice_max(n, n= 1000 )
     })
 }

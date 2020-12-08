@@ -30,6 +30,7 @@ ui <- fluidPage(
         "HOPE - Bachelor",
         tabPanel("TFIDF",
                  sidebarLayout(
+                     titlePanel("TFIDF"),
                      sidebarPanel(substr(lorem,1,500)),
                      mainPanel(tabsetPanel(
                          type = "tabs",
@@ -39,6 +40,7 @@ ui <- fluidPage(
                  )),
         tabPanel("GloVE",
                  sidebarLayout(
+                     titlePanel("GloVe"),
                      sidebarPanel(substr(lorem, 1, 500)),
                      mainPanel(
                          selectizeInput(
@@ -57,6 +59,7 @@ ui <- fluidPage(
                  ), 
         tabPanel("LDAvis",
                  sidebarLayout(
+                     titlePanel("LDAvis"),
                      sidebarPanel(substr(lorem,1,500)),
                      mainPanel(
                          tabsetPanel(
@@ -81,6 +84,7 @@ ui <- fluidPage(
                  )),
         tabPanel("Tabeller",
                  sidebarLayout(
+                     titlePanel("Tables"),
                      sidebarPanel(substr(lorem,1,500)),
                      mainPanel(
                          tabsetPanel(
@@ -95,6 +99,7 @@ ui <- fluidPage(
                  )),
         tabPanel("Om",
                  sidebarLayout(
+                     titlePanel("About"),
                      sidebarPanel(substr(lorem,1,500)),
                      mainPanel(lorem)
                  ))
