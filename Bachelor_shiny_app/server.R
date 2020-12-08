@@ -22,6 +22,7 @@ p_load(
 )
 load("workspace.RData")
 factor_levels <- levels(as.factor(c("Baseline","Outbreak","PostOutbreak")))
+
 table_df<- df %>%
     filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
     anti_join(stop_ord) %>%
