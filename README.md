@@ -4,7 +4,7 @@ Assuming R is installed, it should be possible to run the command below in the s
 
 
 ```
-$ Rscript -e 'install.packages(c("pacman","tidyverse","text2vec","tidytext","shiny","shinyjs","UsingR", "DT"),repos = "http://cran.us.r-project.org")'
+$ Rscript -e 'install.packages(c("pacman","tidyverse","text2vec","tidytext","shiny","shinyjs","UsingR", "DT", "shinythemes"),repos = "http://cran.us.r-project.org")'
 ```
 Shiny Server needs to be installed. The following links has some information on that...
 

@@ -1,4 +1,6 @@
 
+
+
 if (!require("pacman"))
     install.packages("pacman")
 
@@ -7,8 +9,8 @@ pacman::p_load(tidyverse,
                tidytext,
                shiny,
                shinyjs,
-               UsingR
-)
+               UsingR,
+               shinythemes)
 
 load("workspace.RData")
 
@@ -16,90 +18,106 @@ getwd()
 # Define UI for application that draws a histogram
 ui <- fluidPage(
     # Application title
+    theme = shinytheme("cosmo"),
     shinyjs::useShinyjs(),
     navbarPage(
         "HOPE - SemTrackR",
-        tabPanel("Frontpage",
-                 sidebarLayout(
-                     sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("Hope SemTrackR"),substr(lorem,1,1000))
-                 )),
-        tabPanel("Distinct Words",
-                 sidebarLayout(
-                     sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("Distinct Words"),
-                               tabsetPanel(
-                                   type = "tabs",
-                                   tabPanel("Names Only", plotOutput("names")),
-                                   tabPanel("Names filtered", plotOutput("noNames"))
-                               ))
-                 )),
-        tabPanel("Association Search Engine",
-                 sidebarLayout(
-                     sidebarPanel(substr(lorem, 1, 500)),
-                     mainPanel(h2("Word Association Search Engine"),
-                               selectizeInput(
-                                   "GloVeLemma",
-                                   "Search word",
-                                   totalVocab$term,
-                                   selected = "danmark_propn",
-                                   options = list(allowEmptyOption = FALSE)
-                               ),
-                               actionButton(
-                                   inputId = "search_button",
-                                   label = "Start search engine!"
-                               ), plotOutput("GloVE")
-                     )
-                 )
-        ), 
-        tabPanel("Topic Models",
-                 sidebarLayout(
-                     sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("Topic Models"),
-                               tabsetPanel(
-                                   type = "tabs",
-                                   id = "navid",
-                                   tabPanel("Before COVID-19 in Denmark",
-                                            includeHTML("LDAvisModels/baselineLDAvis.html")),
-                                   tabPanel(
-                                       "During lockdown",
-                                       ## Include new DIV here & Set initial height
-                                       div(id = "appendhere"),
-                                       includeHTML("LDAvisModels/outbreakLDAvis.html")
-                                   )
-                                   ,
-                                   tabPanel(
-                                       "After lockdown",
-                                       ## Include new DIV here & Set initial height
-                                       div(id = "appendhere"),
-                                       includeHTML("LDAvisModels/postOutbreakLDAvis.html")
-                                   ))
-                     )
-                 )),
-        tabPanel("Tables",
-                 sidebarLayout(
-                     sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("Tables"),
-                               tabsetPanel(
-                                   type = "tabs",
-                                   tabPanel("Before COVID-19 in Denmark",
-                                            DT::dataTableOutput("tableBaseline")),
-                                   tabPanel("During lockdown",
-                                            DT::dataTableOutput("tableOutbreak")),
-                                   tabPanel("After lockdown",
-                                            DT::dataTableOutput("tablePostOutbreak"))
-                               ))
-                 )),
+        tabPanel(
+            "Front Page",
+            h2("Hope SemTrackR"),
+            substr(lorem, 1, 1500)
+        )
+        ,
+        tabPanel(
+            "Distinct Words",
+            
+            h2("Distinct Words"),
+            substr(lorem, 1, 500),
+            br(),
+            br(),
+            tabsetPanel(
+                type = "tabs",
+                tabPanel("Names Only", plotOutput("names")),
+                tabPanel("Names Removed", plotOutput("noNames"))
+            )
+        )
+        ,
+        tabPanel(
+            "Association Search Engine",
+            h2("Word Association Search Engine"),
+            substr(lorem, 1, 500),
+            br(),
+            br(),
+            selectizeInput(
+                "GloVeLemma",
+                "Search word",
+                totalVocab$term,
+                selected = "danmark_propn",
+                options = list(allowEmptyOption = FALSE)
+            ),
+            actionButton(inputId = "search_button",
+                         label = "Start search engine!"),
+            plotOutput("GloVE")
+        )
+        
+        ,
+        tabPanel(
+            "Topic Models",
+            h2("Topic Models"),
+            substr(lorem, 1, 500),
+            br(),
+            br(),
+            tabsetPanel(
+                type = "tabs",
+                id = "navid",
+                tabPanel(
+                    "Before COVID-19 in Denmark",
+                    includeHTML("LDAvisModels/baselineLDAvis.html")
+                ),
+                tabPanel(
+                    "During lockdown",
+                    ## Include new DIV here & Set initial height
+                    div(id = "appendhere"),
+                    includeHTML("LDAvisModels/outbreakLDAvis.html")
+                )
+                ,
+                tabPanel(
+                    "After lockdown",
+                    ## Include new DIV here & Set initial height
+                    div(id = "appendhere"),
+                    includeHTML("LDAvisModels/postOutbreakLDAvis.html")
+                )
+            )
+        )
+        ,
+        tabPanel(
+            "Tables",
+            h2("Tables"),
+            substr(lorem, 1, 500),
+            br(),
+            br(),
+            tabsetPanel(
+                type = "tabs",
+                tabPanel(
+                    "Before COVID-19 in Denmark",
+                    DT::dataTableOutput("tableBaseline")
+                ),
+                tabPanel("During lockdown",
+                         DT::dataTableOutput("tableOutbreak")),
+                tabPanel("After lockdown",
+                         DT::dataTableOutput("tablePostOutbreak"))
+            )
+        )
+        ,
         tabPanel("About",
-                 sidebarLayout(
-                     sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("About"),lorem)
-                 ))
+                 h2("About"), lorem)
     )
 )
 
 
-factor_levels <- levels(as.factor(c("Baseline","Outbreak","PostOutbreak")))
+
+factor_levels <-
+    levels(as.factor(c("Baseline", "Outbreak", "PostOutbreak")))
 
 search_and_plot <-
     function(word,
@@ -115,7 +133,8 @@ search_and_plot <-
         df = rbind(baseline, outbreak, postOutbreak) %>%
             filter(
                 CoronaStatus == "Baseline" |
-                    CoronaStatus == "Outbreak" | CoronaStatus == "PostOutbreak"
+                    CoronaStatus == "Outbreak" |
+                    CoronaStatus == "PostOutbreak"
             )
         df %>%
             mutate(
@@ -126,20 +145,20 @@ search_and_plot <-
             geom_col(show.legend = FALSE) +
             labs(x = NULL, y = "similarity") +
             coord_flip() +
-            facet_wrap( ~ CoronaStatus, scales = "free_y") +
+            facet_wrap(~ CoronaStatus, scales = "free_y") +
             scale_x_reordered() +
             scale_y_continuous(n.breaks = 5) +
-            ggtitle(paste("top", top_n, "words related to:", word)) + 
-            scale_fill_discrete(drop=TRUE,
+            ggtitle(paste("Top", top_n, "words related to:", word)) +
+            scale_fill_discrete(drop = TRUE,
                                 limits = factor_levels)
         
         
     }
 
 
-tfidf_df<- tfidf_df %>%
+tfidf_df <- tfidf_df %>%
     group_by(CoronaStatus) %>%
-    slice_max(20, n = tf_idf) %>%
+    slice_max(tf_idf, n = 20) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -147,9 +166,9 @@ tfidf_df<- tfidf_df %>%
     )
 
 
-tfidf_dfNames<- tfidf_dfNames %>%
+tfidf_dfNames <- tfidf_dfNames %>%
     group_by(CoronaStatus) %>%
-    slice_max(20, n = tf_idf) %>%
+    slice_max(tf_idf,  n = 20) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -162,10 +181,10 @@ server <- function(input, output, session) {
         tfidf_dfNames %>%
             ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
             geom_col(show.legend = FALSE) +
-            labs(x = NULL, y = "tf-idf") +
-            facet_wrap( ~ CoronaStatus, scales = "free_y") +
+            labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
+            facet_wrap(~ CoronaStatus, scales = "free_y") +
             coord_flip() +
-            ggtitle("TF-IDF: Names") +
+            ggtitle("TF-IDF: Names Only") +
             scale_y_continuous(n.breaks = 3) +
             scale_x_reordered()
     })
@@ -173,10 +192,10 @@ server <- function(input, output, session) {
         tfidf_df %>%
             ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
             geom_col(show.legend = FALSE) +
-            labs(x = NULL, y = "tf-idf") +
-            facet_wrap( ~ CoronaStatus, scales = "free_y") +
+            labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
+            facet_wrap(~ CoronaStatus, scales = "free_y") +
             coord_flip() +
-            ggtitle("TF-IDF: NER-filtered") +
+            ggtitle("TF-IDF: Names Removed") +
             scale_x_reordered() +
             scale_y_continuous(n.breaks = 3)
     })
@@ -202,20 +221,20 @@ server <- function(input, output, session) {
     output$tableBaseline <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "Baseline") %>%
-            arrange(desc(n)) %>% 
-            slice_max(n, n = 1000 )
+            arrange(desc(n)) %>%
+            slice_max(n, n = 1000)
     })
     output$tableOutbreak <- DT::renderDataTable({
         table_df %>%
-            filter( CoronaStatus == "Outbreak") %>%
-            arrange(desc(n))%>% 
-            slice_max(n, n = 1000 )
+            filter(CoronaStatus == "Outbreak") %>%
+            arrange(desc(n)) %>%
+            slice_max(n, n = 1000)
     })
     output$tablePostOutbreak <- DT::renderDataTable({
-        table_df %>% 
-            filter( CoronaStatus == "PostOutbreak") %>%
-            arrange(desc(n))%>% 
-            slice_max(n, n= 1000 )
+        table_df %>%
+            filter(CoronaStatus == "PostOutbreak") %>%
+            arrange(desc(n)) %>%
+            slice_max(n, n = 1000)
     })
 }
 
@@ -225,5 +244,5 @@ server <- function(input, output, session) {
 
 #options(shiny.port = 8890) #set port to the right number
 
-# Run the application 
+# Run the application
 shinyApp(ui = ui, server = server)
