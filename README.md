@@ -20,5 +20,5 @@ To stop screen press ctrl+c
 Start the app by running: 
 
 ```
-$ Rscript app.R
+$ Rscript HOPE_SemTrackR_Shiny/app.R
 ```
