@@ -1,24 +1,7 @@
-library(shiny, shinyjs)
-library(pacman)
-p_load(
-    reshape2,
-    jsonlite,
-    tidyverse,
-    tm,
-    topicmodels,
-    tidytext,
-    plotly,
-    widyr,
-    data.table,
-    Morpho,
-    pracma,
-    plotly,
-    lubridate,
-    tidyr,
-    LDAvis,
-    text2vec,
-    UsingR
-)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, shiny, shinyjs,UsingR)
+
+
 load("workspace.RData")
 
 getwd()
@@ -30,19 +13,18 @@ ui <- fluidPage(
         "HOPE - Bachelor",
         tabPanel("TFIDF",
                  sidebarLayout(
-                     titlePanel("TFIDF"),
                      sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(tabsetPanel(
+                     mainPanel(h2("tfidf"),
+                         tabsetPanel(
                          type = "tabs",
                          tabPanel("Personer", plotOutput("names")),
                          tabPanel("Uden Personer", plotOutput("noNames"))
                      ))
                  )),
-        tabPanel("GloVE",
+        tabPanel("GloVe",
                  sidebarLayout(
-                     titlePanel("GloVe"),
                      sidebarPanel(substr(lorem, 1, 500)),
-                     mainPanel(
+                     mainPanel(h2("GloVe"),
                          selectizeInput(
                              "GloVeLemma",
                              "Search word",
@@ -59,9 +41,8 @@ ui <- fluidPage(
                  ), 
         tabPanel("LDAvis",
                  sidebarLayout(
-                     titlePanel("LDAvis"),
                      sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(
+                     mainPanel(h2("LDAvis"),
                          tabsetPanel(
                              type = "tabs",
                              id = "navid",
@@ -84,9 +65,8 @@ ui <- fluidPage(
                  )),
         tabPanel("Tabeller",
                  sidebarLayout(
-                     titlePanel("Tables"),
                      sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(
+                     mainPanel(h2("Tables"),
                          tabsetPanel(
                          type = "tabs",
                          tabPanel("Baseline",
@@ -99,9 +79,8 @@ ui <- fluidPage(
                  )),
         tabPanel("Om",
                  sidebarLayout(
-                     titlePanel("About"),
                      sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(lorem)
+                     mainPanel(h2("About"),lorem)
                  ))
     )
 )

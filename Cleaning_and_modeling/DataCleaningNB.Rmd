@@ -1,0 +1,150 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r, Packages}
+library(pacman)
+p_load(
+  reshape2,
+  jsonlite,
+  tidyverse,
+  tm,
+  topicmodels,
+  parallel,
+  tidytext,
+  plotly,
+  widyr,
+  data.table,
+  Morpho,
+  pracma,
+  plotly,
+  lubridate,
+  tidyr,
+  LDAvis,
+  servr,
+  igraph,
+  ggraph,
+  gensimr,
+  text2vec
+)
+
+p_load(reshape2,jsonlite,tidyverse, tm, topicmodels, parallel, tidytext, plotly, widyr,data.table)
+
+
+```
+
+
+```{r, Read Data}
+
+#Parallize this process on 16 threads
+cluster <- makeCluster(4)
+#Export the jsonlite function stream_in to the cluster
+clusterExport(cluster,list("stream_in"))
+#Create an empty list for the dataframe for each file
+import <- list()
+#Run this function on every file in the ./import directory
+import <- parLapply(cluster,list.files(path = "/home/ptrt/FrontPage-ndjson/"),function(file) {
+  #jsonlite function to convert the ndjson file to a dataframe
+  df1 <- stream_in(file(paste0("/home/ptrt/FrontPage-ndjson/",file)))
+  #select which columns to keep
+  df1$paper <- file
+  return(df1)
+})
+#function called from the data.table library
+df1 <- rbindlist(import)
+#Now you can stop the cluster
+stopCluster(cluster)
+
+df1$text <- str_remove_all(df1$text, "[:punct:]")
+df1$text <- str_replace_all(df1$text, "[:digit:]", "")
+
+df1$date <- lubridate::ymd_hms(df1$date)
+
+df1 %>% write_csv("data.csv")
+
+df1 %>% saveRDS("data.rds")
+
+
+```
+
+```{r}
+stop_ord <-
+  read_delim(
+    "https://gist.githubusercontent.com/berteltorp/0cf8a0c7afea7f25ed754f24cfc2467b/raw/305d8e3930cc419e909d49d4b489c9773f75b2d6/stopord.txt",
+    delim = "\n",
+    col_names = F
+  )
+stop_ord <- stop_ord %>% rename(lemma = X1)
+
+stop_ord <- stop_ord$lemma %>% append(c("Note", "note", "al"))
+
+stop_ord <- as.data.frame(stop_ord) %>% rename(lemma = stop_ord)
+
+stop_ord %>% write_csv("custom_stop_words.csv")
+```
+
+
+```{python}
+import timeit
+import pandas as pd
+import text_to_x as ttx
+
+start = timeit.timeit()
+print("start")
+print("test1")
+print("test2")
+ttt = ttx.TextToTokens(lang = "da", ner = "flair")
+print("test3")
+dataTexts=pd.read_csv("data.csv")
+print("test4")
+allTexts = dataTexts["text"]
+print("test5")
+ttt.texts_to_tokens(allTexts)
+print("test6 ")
+full_dfs = ttt.get_token_dfs()
+print("end")
+end = timeit.timeit()
+print(end - start)
+```
+
+```{r}
+py <- reticulate::py_run_string("")
+
+full_df <- bind_rows(py$full_dfs, .id = "ID")
+
+colnames(full_df)
+full_df<- full_df %>% select(c("ID","n_sent","token","lemma","upos","ner"))
+str(full_df)
+
+full_df <- df1 %>% tibble::rowid_to_column( "ID") %>% mutate(ID = as.character(ID))%>% select(c("ID","paper"), "date") %>%  merge(full_df, by = "ID")
+
+
+full_df <- full_df%>%
+  mutate(
+    CoronaStatus = case_when(
+      date < ymd("2020-02-26") ~ "Baseline",
+      date > ymd("2020-02-28") & date < ymd("2020-04-12") ~ "Outbreak",
+      date > ymd("2020-04-12") ~  "PostOutbreak"
+    )
+  ) %>% 
+  drop_na()
+
+full_df %>% write.csv("full_tokenized_data.csv")
+
+full_df %>% saveRDS("full_tokenized_data.rds")
+
+```
+
+```{r}
+
+full_df %>%
+  filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
+  anti_join(stop_ord) %>%
+  group_by(ID) %>%
+  mutate(text = glue::glue_collapse(paste(lemma, upos, sep = "_"), " ")) %>%
+  select(c("ID", "date", "paper", "CoronaStatus", "text")) %>%
+  unique() %>%
+  saveRDS("lemmatizedAndTaggedTexts.rds")
+
+```

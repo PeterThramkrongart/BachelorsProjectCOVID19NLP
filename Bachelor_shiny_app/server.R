@@ -1,26 +1,16 @@
+if (!require("pacman")) install.packages("pacman")
 
-library(shiny, shinyjs)
-library(pacman)
-p_load(
-    reshape2,
-    jsonlite,
-    tidyverse,
-    tm,
-    topicmodels,
-    tidytext,
-    plotly,
-    widyr,
-    data.table,
-    Morpho,
-    pracma,
-    plotly,
-    lubridate,
-    tidyr,
-    LDAvis,
-    text2vec,
-    UsingR
-)
+
+pacman::p_load(tidyverse,
+               text2vec,
+               tidytext,
+               shiny,
+               shinyjs, UsingR)
+
+
+
 load("workspace.RData")
+
 factor_levels <- levels(as.factor(c("Baseline","Outbreak","PostOutbreak")))
 
 search_and_plot <-
