@@ -1,22 +1,14 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
-
-if (!require("pacman")) install.packages("pacman")
+if (!require("pacman"))
+    install.packages("pacman")
 
 pacman::p_load(tidyverse,
                text2vec,
                tidytext,
                shiny,
-               shinyjs, UsingR)
-
-
+               shinyjs,
+               UsingR
+)
 
 load("workspace.RData")
 
@@ -26,21 +18,21 @@ ui <- fluidPage(
     # Application title
     shinyjs::useShinyjs(),
     navbarPage(
-        "HOPE - Bachelor",
-        tabPanel("TFIDF",
+        "HOPE - SemTrackR",
+        tabPanel("Distinct Words",
                  sidebarLayout(
                      sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("tfidf"),
+                     mainPanel(h2("Distinct Words"),
                                tabsetPanel(
                                    type = "tabs",
-                                   tabPanel("Personer", plotOutput("names")),
-                                   tabPanel("Uden Personer", plotOutput("noNames"))
+                                   tabPanel("Names Only", plotOutput("names")),
+                                   tabPanel("Names filtered", plotOutput("noNames"))
                                ))
                  )),
-        tabPanel("GloVe",
+        tabPanel("Association Search Engine",
                  sidebarLayout(
                      sidebarPanel(substr(lorem, 1, 500)),
-                     mainPanel(h2("GloVe"),
+                     mainPanel(h2("Word Association Search Engine"),
                                selectizeInput(
                                    "GloVeLemma",
                                    "Search word",
@@ -50,50 +42,50 @@ ui <- fluidPage(
                                ),
                                actionButton(
                                    inputId = "search_button",
-                                   label = "Start Søgning"
+                                   label = "Start search engine!"
                                ), plotOutput("GloVE")
                      )
                  )
         ), 
-        tabPanel("LDAvis",
+        tabPanel("Topic Models",
                  sidebarLayout(
                      sidebarPanel(substr(lorem,1,500)),
-                     mainPanel(h2("LDAvis"),
+                     mainPanel(h2("Topic Models"),
                                tabsetPanel(
                                    type = "tabs",
                                    id = "navid",
-                                   tabPanel("Før Udbrud",
+                                   tabPanel("Before COVID-19 in Denmark",
                                             includeHTML("LDAvisModels/baselineLDAvis.html")),
                                    tabPanel(
-                                       "Udbrud",
+                                       "During lockdown",
                                        ## Include new DIV here & Set initial height
                                        div(id = "appendhere"),
                                        includeHTML("LDAvisModels/outbreakLDAvis.html")
                                    )
                                    ,
                                    tabPanel(
-                                       "Post Udbrud",
+                                       "After lockdown",
                                        ## Include new DIV here & Set initial height
                                        div(id = "appendhere"),
                                        includeHTML("LDAvisModels/postOutbreakLDAvis.html")
                                    ))
                      )
                  )),
-        tabPanel("Tabeller",
+        tabPanel("Tables",
                  sidebarLayout(
                      sidebarPanel(substr(lorem,1,500)),
                      mainPanel(h2("Tables"),
                                tabsetPanel(
                                    type = "tabs",
-                                   tabPanel("Baseline",
+                                   tabPanel("Before COVID-19 in Denmark",
                                             DT::dataTableOutput("tableBaseline")),
-                                   tabPanel("Outbreak",
+                                   tabPanel("During lockdown",
                                             DT::dataTableOutput("tableOutbreak")),
-                                   tabPanel("Post Outbreak",
+                                   tabPanel("After lockdown",
                                             DT::dataTableOutput("tablePostOutbreak"))
                                ))
                  )),
-        tabPanel("Om",
+        tabPanel("About",
                  sidebarLayout(
                      sidebarPanel(substr(lorem,1,500)),
                      mainPanel(h2("About"),lorem)
