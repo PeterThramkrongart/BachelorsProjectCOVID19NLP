@@ -19,6 +19,11 @@ ui <- fluidPage(
     shinyjs::useShinyjs(),
     navbarPage(
         "HOPE - SemTrackR",
+        tabPanel("Frontpage",
+                 sidebarLayout(
+                     sidebarPanel(substr(lorem,1,500)),
+                     mainPanel(h2("Hope SemTrackR"),substr(lorem,1,1000))
+                 )),
         tabPanel("Distinct Words",
                  sidebarLayout(
                      sidebarPanel(substr(lorem,1,500)),
@@ -102,7 +107,6 @@ search_and_plot <-
              baseline = baselineGloVe,
              outbreak = outbreakGloVe,
              postOutbreak = postOutbreakGloVe) {
-        print(class(word))
         baseline = try(baseline %>% coSimFunc(word, top_n, "Baseline"), silent = T)
         outbreak = try(outbreak %>% coSimFunc(word, top_n, "Outbreak"), silent = T)
         postOutbreak = try(postOutbreak %>% coSimFunc(word, top_n, "PostOutbreak"),
@@ -135,7 +139,7 @@ search_and_plot <-
 
 tfidf_df<- tfidf_df %>%
     group_by(CoronaStatus) %>%
-    top_n(20, tf_idf) %>%
+    slice_max(20, n = tf_idf) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -145,7 +149,7 @@ tfidf_df<- tfidf_df %>%
 
 tfidf_dfNames<- tfidf_dfNames %>%
     group_by(CoronaStatus) %>%
-    top_n(20, tf_idf) %>%
+    slice_max(20, n = tf_idf) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
