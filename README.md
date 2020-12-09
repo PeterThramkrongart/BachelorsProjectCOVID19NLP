@@ -4,7 +4,7 @@ After R is installed, tt should be possible to run the command below in the shel
 
 
 ```
-$ Rscript -e 'install.packages(c("pacman","tidyverse","text2vec","tidytext","shiny","shinyjs","UsingR"),repos = "http://cran.us.r-project.org")'
+$ Rscript -e 'install.packages(c("pacman","tidyverse","text2vec","tidytext","shiny","shinyjs","UsingR", "DT"),repos = "http://cran.us.r-project.org")'
 ```
 
 To start the server follow this tutorial https://linuxize.com/post/how-to-use-linux-screen/
