@@ -472,7 +472,7 @@ rm(
   pyLDAvis,
   pyOutbreakLDAvis
 )
-save.image("workspace.RData")
+save.image("/home/ptrt/BachelorsProjectCOVID19NLP/HOPE_SemTrackR_Shiny/workspace.RData")
 
 
 sessioninfo::session_info()
