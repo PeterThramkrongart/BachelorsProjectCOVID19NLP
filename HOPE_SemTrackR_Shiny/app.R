@@ -158,7 +158,7 @@ search_and_plot <-
 
 tfidf_df <- tfidf_df %>%
     group_by(CoronaStatus) %>%
-    slice_max(tf_idf, n = 20) %>%
+    top_n(20, tf_idf) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -168,7 +168,7 @@ tfidf_df <- tfidf_df %>%
 
 tfidf_dfNames <- tfidf_dfNames %>%
     group_by(CoronaStatus) %>%
-    slice_max(tf_idf,  n = 20) %>%
+    top_n(20, tf_idf) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -222,19 +222,19 @@ server <- function(input, output, session) {
         table_df %>%
             filter(CoronaStatus == "Baseline") %>%
             arrange(desc(n)) %>%
-            slice_max(n, n = 1000)
+            top_n(1000, n)
     })
     output$tableOutbreak <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "Outbreak") %>%
             arrange(desc(n)) %>%
-            slice_max(n, n = 1000)
+            top_n(1000, n)
     })
     output$tablePostOutbreak <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "PostOutbreak") %>%
             arrange(desc(n)) %>%
-            slice_max(n, n = 1000)
+            top_n( 1000, n)
     })
 }
 
