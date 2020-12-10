@@ -240,7 +240,7 @@ server <- function(input, output, session) {
 
 
 
-options(shiny.host = "127.0.0.1")
+options(shiny.host = "128.0.0.1")
 
 options(shiny.port = 8119) #set port to the right number
 
