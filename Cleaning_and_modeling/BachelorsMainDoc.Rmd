@@ -40,9 +40,9 @@ p_load(
 ```
 
 ```{r}
-df <- readRDS("full_tokenized_data.rds")
+df <- readRDS("/home/ptrt/BachelorsProjectCOVID19NLP/full_tokenized_data.rds")
 
-stop_ord <- read_csv("custom_stop_words.csv")
+stop_ord <- read_csv("/home/ptrt/BachelorsProjectCOVID19NLP/custom_stop_words.csv")
 
 table_df<- df %>%
     filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
@@ -290,7 +290,7 @@ return(vocab)}
 df2 <-
   df %>% filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
   anti_join(stop_ord) %>%
-  mutate(lemma = paste(lemma, upos, sep = "_")) %> <- %
+  mutate(lemma = paste(lemma, upos, sep = "_")) %>%
   group_by(ID) %>%
   mutate(text = glue::glue_collapse(lemma, " ")) %>% 
   select(c("ID", "date", "paper", "CoronaStatus", "text")) %>%
@@ -314,7 +314,7 @@ vocab = prune_vocabulary(vocab, term_count_min = 5L)
 # Use our filtered vocabulary
 vectorizer = vocab_vectorizer(vocab)
 # use window of 5 for context words
-tcm = create_tcm(it, vectorizer, skip_grams_window = 3L)
+tcm = create_tcm(it, vectorizer, skip_grams_window = 6L)
 
 glove = GlobalVectors$new(rank = 150, x_max = 50)
 wv_main = glove$fit_transform(tcm, n_iter = 30, convergence_tol = 0.05, n_threads = 16)
@@ -472,7 +472,7 @@ rm(
   pyLDAvis,
   pyOutbreakLDAvis
 )
-save.image("Bachelor_shiny_app/workspace.RData")
+save.image("workspace.RData")
 
 
 sessioninfo::session_info()
