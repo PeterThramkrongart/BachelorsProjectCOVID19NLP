@@ -293,7 +293,7 @@ df2 <-
   mutate(lemma = paste(lemma, upos, sep = "_")) %>%
   group_by(ID) %>%
   mutate(text = glue::glue_collapse(lemma, " ")) %>% 
-  select(c("ID", "date", "paper", "CoronaStatus", "text")) %>%
+  dplyr::select(c("ID", "date", "paper", "CoronaStatus", "text")) %>%
   unique()
 ```
 
