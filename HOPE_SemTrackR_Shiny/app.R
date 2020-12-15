@@ -25,25 +25,38 @@ ui <- fluidPage(
         tabPanel(
             "Front Page",
             h2("Hope SemTrackR"),
-            substr(lorem, 1, 1500)
+            "Welcome to the HOPE SemTrackR.
+            This is a tool for exploring how the COVID-19 pandemic has the language used in Danish newspapers.
+            The models are based on the text from 1898 front pages from Danish mainstream newspapers.
+            This includes front pages from Berlingske Tidende, B.T., Ekstrabladet, Information, Jyllands Posten, Politiken, Kristeligt Dagblad, and Weekendavisen.
+            The data is gathered from 2019-12-02 to 2020-09-10. The data is divided into 3 distinct periods.
+            (1) A baseline period from before COVID-19 reached Denmark (before 2020-02-26),
+            (2) an outbreak period (2020-02-28 to 2020-04-12) spanning from the first infection cases in Denmark to the reopening of the first lockdown in Denmark,
+            and (3) a post outbreak period (after 2020-04-12) that covers a period after the lockdown.
+            Click on the tabs in the top panel to proceed to various models and start exploring!"
         )
         ,
         tabPanel(
             "Distinct Words",
             
             h2("Distinct Words"),
-            substr(lorem, 1, 500),
+            "Term frequency- inverse document frequency (TF-IDF) is a weighting metric to score words by how unique they are in a document compared to the rest of the documents.
+            By treating the whole instead of comparing documents to documents,
+            these bar plots show the 20 most distinct words (sorted by TF-IDF weights) in each period compared to the two other periods.
+            There are two models:
+            One based on person names only and one based on nouns, verbs adjectives, and adverbs only.
+            Use the tabs to navigate between the two.",
             br(),
             br(),
             tabsetPanel(
                 type = "tabs",
                 tabPanel("Names Only", plotOutput("names")),
-                tabPanel("Names Removed", plotOutput("noNames"))
+                tabPanel("Nouns, verbs adjectives, and adverbs only", plotOutput("noNames"))
             )
         )
         ,
         tabPanel(
-            "Association Search Engine",
+            "Word Similarity Search Engine",
             h2("Word Association Search Engine"),
             substr(lorem, 1, 500),
             br(),
@@ -158,7 +171,7 @@ search_and_plot <-
 
 tfidf_df <- tfidf_df %>%
     group_by(CoronaStatus) %>%
-    slice_max(tf_idf, n = 20) %>%
+    top_n(20, tf_idf) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -168,7 +181,7 @@ tfidf_df <- tfidf_df %>%
 
 tfidf_dfNames <- tfidf_dfNames %>%
     group_by(CoronaStatus) %>%
-    slice_max(tf_idf,  n = 20) %>%
+    top_n(20, tf_idf) %>%
     ungroup() %>%
     mutate(
         CoronaStatus = as.factor(CoronaStatus),
@@ -222,27 +235,31 @@ server <- function(input, output, session) {
         table_df %>%
             filter(CoronaStatus == "Baseline") %>%
             arrange(desc(n)) %>%
-            slice_max(n, n = 1000)
+            top_n(1000, n)
     })
     output$tableOutbreak <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "Outbreak") %>%
             arrange(desc(n)) %>%
-            slice_max(n, n = 1000)
+            top_n(1000, n)
     })
     output$tablePostOutbreak <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "PostOutbreak") %>%
             arrange(desc(n)) %>%
-            slice_max(n, n = 1000)
+            top_n( 1000, n)
     })
 }
 
 
 
+<<<<<<< HEAD
 #options(shiny.host = "127.0.0.2")
+=======
+#options(shiny.host = "http://127.0.0.1:8119/petersDashboard/")
+>>>>>>> 75c5458a5309a0a573f89814a5c88c33c1cea3e6
 
-options(shiny.port = 8119) #set port to the right number
+options(shiny.port = 8889) #set port to the right number
 
 # Run the application
 shinyApp(ui = ui, server = server)

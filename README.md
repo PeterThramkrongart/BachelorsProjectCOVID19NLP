@@ -1,10 +1,18 @@
 # BachelorsProjectCOVID19NLP
 
-Assuming R is installed, it should be possible to run the command below in the shell.
+Assuming R is installed, open an R sesions typing R in the terminal. Then ren the command below:
 
 
 ```
-$ Rscript -e 'install.packages(c("pacman","tidyverse","text2vec","tidytext","shiny","shinyjs","UsingR", "DT", "shinythemes"),repos = "http://cran.us.r-project.org")'
+$ R
+
+>install.packages("tidyverse",
++                    "text2vec",
++                    "tidytext",
++                    "shiny",
++                    "shinyjs",
++                    "UsingR",
++                    "shinythemes")
 ```
 Shiny Server needs to be installed. The following links has some information on that...
 
@@ -24,14 +32,9 @@ $ screen -r
 
 To stop screen press ctrl+c
 
-The app needs connect to the right port. I don't what it is yet. When a port has been created the command below needs to be decommented and changed to the right port number in the app.R script.
-
-````
-#options(shiny.port = 8890) #set port to the right number
-```
 
 Start the app by running: 
 
 ```
-$ Rscript -e "shiny::runApp('HOPE_SemTrackR_Shiny')"
+$ Rscript -e "shiny::runApp('BachelorsProjectCOVID19NLP/HOPE_SemTrackR_Shiny', port = 8119)"
 ```
