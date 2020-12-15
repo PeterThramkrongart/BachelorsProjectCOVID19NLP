@@ -92,12 +92,13 @@ tfidf_df %>%
 textLemmasNames <- df %>%
   drop_na() %>% 
   filter(ner == "B-PER" | ner == "I-PER") %>% 
-  count(CoronaStatus,lemma, sort = T)
+  count(CoronaStatus,lemma, sort = T) %>% 
+  filter(n >= 25)
 
 totalLemmasNames <- textLemmasNames %>% 
   drop_na() %>% 
   group_by(CoronaStatus) %>% 
-  summarise(total = sum(n))
+  summarise(total = sum(n)) 
 
 tfidf_dfNames <- left_join(textLemmasNames,totalLemmasNames)
 
@@ -304,6 +305,36 @@ pyPostOutbreakLDAvis = pyLDAvis$prepare(
 
 pyLDAvis$save_html(pyPostOutbreakLDAvis, "LDAvisModels/postOutbreakLDAvis.html")
 
+```
+
+```{r}
+
+baselineLDAvis$phi %>%
+  GetTopTerms(20) %>%
+  as.tibble()
+
+outbreakLDAvis$phi %>%
+  GetTopTerms(20) %>%
+  as.tibble()
+
+postOutbreakLDAvis$phi %>%
+  GetTopTerms(20) %>%
+  as.tibble()
+
+baselineLDAvis$phi %>%
+  GetTopTerms(20)  %>%
+  as.tibble() %>%
+  write_csv("baselineLDATopTerms.csv")
+
+outbreakLDAvis$phi %>%
+  GetTopTerms(20) %>%
+  as.tibble() %>%
+  write_csv("outbreakLDATopTerms.csv")
+
+postOutbreakLDAvis$phi %>%
+  GetTopTerms(20) %>%
+  as.tibble() %>%
+  write_csv("postOutbreakLDATopTerms.csv")
 ```
 
 
