@@ -252,12 +252,9 @@ server <- function(input, output, session) {
 }
 
 
+#options(shiny.host = "127.0.0.1")
 
-<<<<<<< HEAD
-#options(shiny.host = "127.0.0.2")
-=======
-#options(shiny.host = "http://127.0.0.1:8119/petersDashboard/")
->>>>>>> 75c5458a5309a0a573f89814a5c88c33c1cea3e6
+
 
 options(shiny.port = 8889) #set port to the right number
 
