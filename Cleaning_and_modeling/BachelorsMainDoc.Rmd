@@ -33,7 +33,6 @@ p_load(
   servr,
   igraph,
   ggraph,
-  gensimr,
   text2vec
 )
 
@@ -87,7 +86,8 @@ tfidf_df %>%
   scale_x_reordered() +
   scale_y_continuous(n.breaks = 3)
 ```
-```{r}
+
+```{r, fig.height=5, fig.width=12}
 textLemmasNames <- df %>%
   drop_na() %>% 
   filter(ner == "B-PER" | ner == "I-PER") %>% 
@@ -103,18 +103,49 @@ tfidf_dfNames <- left_join(textLemmasNames,totalLemmasNames)
 tfidf_dfNames <- tfidf_dfNames %>% 
   bind_tf_idf(lemma, CoronaStatus, n)
 
-tfidf_dfNames %>%
-  arrange(desc(tf_idf)) %>%
-  mutate(lemma = factor(lemma, levels = rev(unique(lemma)))) %>% 
-  group_by(CoronaStatus) %>% 
-  top_n(20) %>% 
+
+tfidf_df <- tfidf_df %>%
+  group_by(CoronaStatus) %>%
+  top_n(20, tf_idf) %>%
   ungroup() %>%
+  mutate(
+    CoronaStatus = as.factor(CoronaStatus),
+    lemma = reorder_within(lemma, tf_idf, CoronaStatus)
+  )
+
+tfidf_df %>%
   ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
   geom_col(show.legend = FALSE) +
-  labs(x = NULL, y = "tf-idf") +
-  facet_wrap(~CoronaStatus, scales = "free") +
-  coord_flip()+
-  ggtitle("TF-IDF: Names")
+  labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
+  facet_wrap( ~ CoronaStatus, scales = "free_y") +
+  coord_flip() +
+  ggtitle("TF-IDF: Nouns, verbs adjectives, and adverbs only") +
+  scale_x_reordered() +
+  scale_y_continuous(n.breaks = 3)
+
+ggsave("tfidfNoNames.png", width = 12, height = 5)
+
+tfidf_dfNames <- tfidf_dfNames %>%
+  group_by(CoronaStatus) %>%
+  top_n(20, tf_idf) %>%
+  ungroup() %>%
+  mutate(
+    CoronaStatus = as.factor(CoronaStatus),
+    lemma = reorder_within(lemma, tf_idf, CoronaStatus)
+  )
+
+
+tfidf_dfNames %>%
+  ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
+  facet_wrap( ~ CoronaStatus, scales = "free_y") +
+  coord_flip() +
+  ggtitle("TF-IDF: Names Only") +
+  scale_y_continuous(n.breaks = 3) +
+  scale_x_reordered()
+
+ggsave("tfidfNames.png", width = 12, height = 5)
 ```
 
 

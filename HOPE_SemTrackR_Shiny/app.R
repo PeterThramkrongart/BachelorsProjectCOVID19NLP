@@ -208,7 +208,7 @@ server <- function(input, output, session) {
             labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
             facet_wrap(~ CoronaStatus, scales = "free_y") +
             coord_flip() +
-            ggtitle("TF-IDF: Names Removed") +
+            ggtitle("TF-IDF: Nouns, verbs adjectives, and adverbs only") +
             scale_x_reordered() +
             scale_y_continuous(n.breaks = 3)
     })
