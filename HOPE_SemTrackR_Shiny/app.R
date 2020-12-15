@@ -25,25 +25,38 @@ ui <- fluidPage(
         tabPanel(
             "Front Page",
             h2("Hope SemTrackR"),
-            substr(lorem, 1, 1500)
+            "Welcome to the HOPE SemTrackR.
+            This is a tool for exploring how the COVID-19 pandemic has the language used in Danish newspapers.
+            The models are based on the text from 1898 front pages from Danish mainstream newspapers.
+            This includes front pages from Berlingske Tidende, B.T., Ekstrabladet, Information, Jyllands Posten, Politiken, Kristeligt Dagblad, and Weekendavisen.
+            The data is gathered from 2019-12-02 to 2020-09-10. The data is divided into 3 distinct periods.
+            (1) A baseline period from before COVID-19 reached Denmark (before 2020-02-26),
+            (2) an outbreak period (2020-02-28 to 2020-04-12) spanning from the first infection cases in Denmark to the reopening of the first lockdown in Denmark,
+            and (3) a post outbreak period (after 2020-04-12) that covers a period after the lockdown.
+            Click on the tabs in the top panel to proceed to various models and start exploring!"
         )
         ,
         tabPanel(
             "Distinct Words",
             
             h2("Distinct Words"),
-            substr(lorem, 1, 500),
+            "Term frequency- inverse document frequency (TF-IDF) is a weighting metric to score words by how unique they are in a document compared to the rest of the documents.
+            By treating the whole instead of comparing documents to documents,
+            these bar plots show the 20 most distinct words (sorted by TF-IDF weights) in each period compared to the two other periods.
+            There are two models:
+            One based on person names only and one based on nouns, verbs adjectives, and adverbs only.
+            Use the tabs to navigate between the two.",
             br(),
             br(),
             tabsetPanel(
                 type = "tabs",
                 tabPanel("Names Only", plotOutput("names")),
-                tabPanel("Names Removed", plotOutput("noNames"))
+                tabPanel("Nouns, verbs adjectives, and adverbs only", plotOutput("noNames"))
             )
         )
         ,
         tabPanel(
-            "Association Search Engine",
+            "Word Similarity Search Engine",
             h2("Word Association Search Engine"),
             substr(lorem, 1, 500),
             br(),
