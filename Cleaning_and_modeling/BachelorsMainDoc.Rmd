@@ -33,7 +33,8 @@ p_load(
   servr,
   igraph,
   ggraph,
-  text2vec
+  text2vec,
+  textmineR
 )
 
 ```
@@ -229,41 +230,40 @@ topicmodels2pyLDAvis <- function(x, ...){
 ```{r}
 baselineLDA <- df %>%
   filter(CoronaStatus == "Baseline") %>%
-  FuncLDA(stop_ord, 50 , 20, seed = 1234)
+  FuncLDA(stop_ord, 50 , 8, seed = 1234)
 
 baselineTidyLDA <- baselineLDA %>% tidyLDA("baselineLDA.csv")
 
-baselineTidyLDA %>%
-  PlotLDA(20, "Top 20 terms in each topic: Pre-Outbreak")
-
+# baselineTidyLDA %>%
+#   PlotLDA(20, "Top 20 terms in each topic: Pre-Outbreak")
 #serVis(topicmodels2LDAvis(baselineLDA), out.dir = "/home/ptrt/BachelorsProjectCOVID19NLP/baselineLDA")
 
-write_json(topicmodels2pyLDAvis(baselineLDA),"LDAvisModels/baselineLDAvis.json")
+#write_json(topicmodels2pyLDAvis(baselineLDA),"LDAvisModels/baselineLDAvis.json")
 baselineLDAvis <- topicmodels2pyLDAvis(baselineLDA)
 
 outbreakLDA <- df %>%
   filter(CoronaStatus == "Outbreak") %>% 
-  FuncLDA(stop_ord,50 , 20, seed = 1234)
+  FuncLDA(stop_ord,50 , 8, seed = 1234)
 
 outbreakTidyLDA <- outbreakLDA %>% tidyLDA("OutbreakLDA.csv")
 
-outbreakTidyLDA %>% PlotLDA(20,"Top 20 terms in each topic: Outbreak") %>% ggplotly()
+# outbreakTidyLDA %>% PlotLDA(20,"Top 20 terms in each topic: Outbreak") %>% ggplotly()
 
-write_json(topicmodels2pyLDAvis(outbreakLDA),"LDAvisModels/outbreakLDAvis.json")
+#write_json(topicmodels2pyLDAvis(outbreakLDA),"LDAvisModels/outbreakLDAvis.json")
 #serVis(topicmodels2LDAvis(outbreakLDA), out.dir = "/home/ptrt/BachelorsProjectCOVID19NLP/OutbreakLDA")
 outbreakLDAvis <- topicmodels2pyLDAvis(outbreakLDA)
 
 postOutbreakLDA <- df %>%
   filter(CoronaStatus == "PostOutbreak") %>% 
-  FuncLDA(stop_ord,50 , 20, seed = 1234)
+  FuncLDA(stop_ord,50 , 8, seed = 1234)
 
 postOutbreakTidyLDA <- outbreakLDA %>% tidyLDA("PostOutbreakLDA.csv")
 
-postOutbreakTidyLDA %>%
-  PlotLDA(20,"Top 20 terms in each topic: Post-Outbreak")
+# postOutbreakTidyLDA %>%
+#   PlotLDA(20,"Top 20 terms in each topic: Post-Outbreak")
 
 #serVis(topicmodels2LDAvis(outbreakLDA), out.dir = "/home/ptrt/BachelorsProjectCOVID19NLP/PostOutbreakLDA")
-write_json(topicmodels2pyLDAvis(postOutbreakLDA),"LDAvisModels/postOutbreakLDAvis.json")
+#write_json(topicmodels2pyLDAvis(postOutbreakLDA),"LDAvisModels/postOutbreakLDAvis.json")
 postOutbreakLDAvis <- topicmodels2pyLDAvis(postOutbreakLDA)
 ```
 
@@ -281,7 +281,7 @@ pybaselineLDAvis = pyLDAvis$prepare(
   term_frequency = baselineLDAvis$term.frequency
 )
 
-pyLDAvis$save_html(pybaselineLDAvis, "Bachelor_shiny_app/LDAvisModels/baselineLDAvis.html")
+pyLDAvis$save_html(pybaselineLDAvis, "LDAvisModels/baselineLDAvis.html")
 
 
 pyOutbreakLDAvis = pyLDAvis$prepare(
@@ -292,7 +292,7 @@ pyOutbreakLDAvis = pyLDAvis$prepare(
   term_frequency = outbreakLDAvis$term.frequency
 )
 
-pyLDAvis$save_html(pyOutbreakLDAvis, "Bachelor_shiny_app/LDAvisModels/outbreakLDAvis.html")
+pyLDAvis$save_html(pyOutbreakLDAvis, "LDAvisModels/outbreakLDAvis.html")
 
 pyPostOutbreakLDAvis = pyLDAvis$prepare(
   topic_term_dists = postOutbreakLDAvis$phi,
@@ -302,7 +302,7 @@ pyPostOutbreakLDAvis = pyLDAvis$prepare(
   term_frequency = postOutbreakLDAvis$term.frequency
 )
 
-pyLDAvis$save_html(pyPostOutbreakLDAvis, "Bachelor_shiny_app/LDAvisModels/postOutbreakLDAvis.html")
+pyLDAvis$save_html(pyPostOutbreakLDAvis, "LDAvisModels/postOutbreakLDAvis.html")
 
 ```
 
@@ -468,6 +468,8 @@ search_and_plot("vaccine_noun")
 
 
 ```{r}
+save.image("/home/ptrt/BachelorsProjectCOVID19NLP/modelingWorkspace.RData")
+
 rm(cluster)
 rm(py)
 rm(pybaselineLDAvis)
