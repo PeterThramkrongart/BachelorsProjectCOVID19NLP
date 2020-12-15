@@ -125,7 +125,7 @@ tfidf_df %>%
   scale_x_reordered() +
   scale_y_continuous(n.breaks = 3)
 
-ggsave("tfidfNoNames.png", width = 12, height = 5)
+ggsave("tfidfNoNames.png", width = 8, height = 5)
 
 tfidf_dfNames <- tfidf_dfNames %>%
   group_by(CoronaStatus) %>%
@@ -147,7 +147,7 @@ tfidf_dfNames %>%
   scale_y_continuous(n.breaks = 3) +
   scale_x_reordered()
 
-ggsave("tfidfNames.png", width = 12, height = 5)
+ggsave("tfidfNames.png", width = 8, height = 5)
 ```
 
 
