@@ -42,14 +42,14 @@ ui <- fluidPage(
             By treating the whole instead of comparing documents to documents,
             these bar plots show the 20 most distinct words (sorted by TF-IDF weights) in each period compared to the two other periods.
             There are two models:
-            One based on person names only and one based on nouns, verbs adjectives, and adverbs only.
+            One based on person names only and one based on nouns, verbs, adjectives, and adverbs only.
             Use the tabs to navigate between the two.",
             br(),
             br(),
             tabsetPanel(
                 type = "tabs",
                 tabPanel("Names Only", plotOutput("names")),
-                tabPanel("Nouns, verbs adjectives, and adverbs only", plotOutput("noNames"))
+                tabPanel("Nouns, verbs, adjectives, and adverbs only", plotOutput("noNames"))
             )
         )
         ,
