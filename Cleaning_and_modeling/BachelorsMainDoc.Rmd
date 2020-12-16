@@ -434,66 +434,57 @@ return(df)
 ```
 
 ```{r, fig.height=6, fig.width=12}
-search_and_plot <- function(word,
-           top_n = 15,
-           baseline = baselineGloVe,
-           outbreak = outbreakGloVe,
-           postOutbreak = postOutbreakGloVe) {
-    result = merge_searches(word, top_n, baseline, outbreak, postOutbreak) %>%
-      mutate(
-        CoronaStatus = as.factor(CoronaStatus),
-        lemma1 = reorder_within(as.factor(lemma), as.numeric(similarity), CoronaStatus)
-      )
-    result %>%   ggplot(aes(lemma1, as.numeric(as.character(similarity)), fill = CoronaStatus)) +
-      geom_col(show.legend = FALSE) +
-      labs(x = NULL, y = "similarity") +
-      coord_flip() +
-      facet_wrap(~ CoronaStatus, scales = "free_y") +
-      scale_x_reordered() +
-      scale_y_continuous(n.breaks = 5)+
-      ggtitle(paste("top", top_n, "words related to:", word))
-      
+factor_levels <-
+    levels(as.factor(c("Baseline", "Outbreak", "PostOutbreak")))
+
+search_and_plot <-
+    function(word,
+             top_n = 15 ,
+             baseline = baselineGloVe,
+             outbreak = outbreakGloVe,
+             postOutbreak = postOutbreakGloVe) {
+        baseline = try(baseline %>% coSimFunc(word, top_n, "Baseline"), silent = T)
+        outbreak = try(outbreak %>% coSimFunc(word, top_n, "Outbreak"), silent = T)
+        postOutbreak = try(postOutbreak %>% coSimFunc(word, top_n, "PostOutbreak"),
+                           silent = T)
+        
+        df = rbind(baseline, outbreak, postOutbreak) %>%
+            filter(
+                CoronaStatus == "Baseline" |
+                    CoronaStatus == "Outbreak" |
+                    CoronaStatus == "PostOutbreak"
+            )
+        df %>%
+            mutate(
+                CoronaStatus = as.factor(CoronaStatus),
+                lemma1 = reorder_within(as.factor(lemma), as.numeric(similarity), CoronaStatus)
+            ) %>%
+            ggplot(aes(lemma1, as.numeric(as.character(similarity)), fill = CoronaStatus)) +
+            geom_col(show.legend = FALSE) +
+            labs(x = NULL, y = "similarity") +
+            coord_flip() +
+            facet_wrap(~ CoronaStatus, scales = "free_y") +
+            scale_x_reordered() +
+            scale_y_continuous(n.breaks = 5) +
+            ggtitle(paste("Top", top_n, "words related to:", word)) +
+            scale_fill_discrete(drop = TRUE,
+                                limits = factor_levels)
 }
 
-search_and_plot2 <- function(word,
-                            top_n = 15,
-                            baseline = baselineGloVe,
-                            outbreak = outbreakGloVe,
-                            postOutbreak = postOutbreakGloVe) {
-  
-  baseline = try(baseline %>%
-                   coSimFunc(word, top_n, "Baseline"), silent = T)
-  
-  outbreak = try(outbreak %>%
-                   coSimFunc(word, top_n, "Outbreak"), silent = T)
-  
-  postOutbreak = try(postOutbreak %>%
-                       coSimFunc(word, top_n, "PostOutbreak"),
-silent = T
-  )
-  
-  result = rbind(baseline, outbreak, postOutbreak) %>%
-    filter(
-      CoronaStatus == "Baseline" |
-        CoronaStatus == "Outbreak" | CoronaStatus == "PostOutbreak"
-    ) %>%
-    mutate(
-      CoronaStatus = as.factor(CoronaStatus),
-      lemma1 = reorder_within(as.factor(lemma), as.numeric(similarity), CoronaStatus)
-    )
-  
-  result %>%   ggplot(aes(lemma1, as.numeric(as.character(similarity)), fill = CoronaStatus)) +
-    geom_col(show.legend = FALSE) +
-    labs(x = NULL, y = "similarity") +
-    coord_flip() +
-    facet_wrap(~ CoronaStatus, scales = "free_y") +
-    scale_x_reordered() +
-    scale_y_continuous(n.breaks = 5) +
-    ggtitle(paste("top", top_n, "words related to:", word))
-  
-}
+search_and_plot("danmark_propn")
+ggsave("danmarkGloVe.png", height = 5, width = 8)
 
-search_and_plot("vaccine_noun")
+search_and_plot("test_noun")
+ggsave("testGloVe.png", height = 5, width = 8)
+
+search_and_plot("isolation_noun")
+ggsave("isolationGloVe.png", height = 5, width = 8)
+
+search_and_plot("sygdom_noun")
+ggsave("sygdomGloVe.png", height = 5, width = 8)
+
+search_and_plot("isolere_verb")
+ggsave("isolereGloVe.png", height = 5, width = 8)
 ```
 
 
