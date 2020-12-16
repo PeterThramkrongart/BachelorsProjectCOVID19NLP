@@ -485,12 +485,19 @@ ggsave("sygdomGloVe.png", height = 5, width = 8)
 
 search_and_plot("isolere_verb")
 ggsave("isolereGloVe.png", height = 5, width = 8)
+
+search_and_plot("økonomi_noun")
+ggsave("økonomiGloVe.png", height = 5, width = 8)
+
+search_and_plot("smitte_verb")
+ggsave("smitteGloVe.png", height = 5, width = 8)
+
 ```
 
 
 
 ```{r}
-save.image("/home/ptrt/BachelorsProjectCOVID19NLP/modelingWorkspace.RData")
+save.image("modelingWorkspace.RData")
 
 rm(cluster)
 rm(py)
@@ -525,10 +532,15 @@ rm(
   pybaselineLDAvis,
   py,
   pyLDAvis,
-  pyOutbreakLDAvis
+  pyOutbreakLDAvis,
+  pyPostOutbreakLDAvis,
+  tcm,
+  vocab,
+  it
 )
 save.image("/home/ptrt/BachelorsProjectCOVID19NLP/HOPE_SemTrackR_Shiny/workspace.RData")
 
+load("modelingWorkspace.RData")
 
 sessioninfo::session_info()
 
