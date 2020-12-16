@@ -40,15 +40,20 @@ p_load(
 ```
 
 ```{r}
+load("modelingWorkspace.RData")
+
 df <- readRDS("/home/ptrt/BachelorsProjectCOVID19NLP/full_tokenized_data.rds")
 
 stop_ord <- read_csv("/home/ptrt/BachelorsProjectCOVID19NLP/custom_stop_words.csv")
 
-table_df<- df %>%
-    filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
-    anti_join(stop_ord) %>%
-    count(lemma, CoronaStatus) %>%
-    drop_na()
+table_df <- df %>%
+  filter(upos %in% c("VERB", "NOUN", "ADV", "PROPN", "ADJ")) %>%
+  anti_join(stop_ord) %>%
+  count(lemma, CoronaStatus) %>%
+  drop_na() %>%
+  group_by(CoronaStatus) %>%
+  arrange(desc(n)) %>%
+  top_n(1000, n)
 ```
 
 ```{r, tfidf}

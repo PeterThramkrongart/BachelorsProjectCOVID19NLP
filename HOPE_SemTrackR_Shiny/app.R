@@ -231,21 +231,17 @@ server <- function(input, output, session) {
     # Replace the renderTable() with DT's version
     output$tableBaseline <- DT::renderDataTable({
         table_df %>%
-            filter(CoronaStatus == "Baseline") %>%
-            arrange(desc(n)) %>%
-            top_n(1000, n)
+            filter(CoronaStatus == "Baseline")
     })
     output$tableOutbreak <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "Outbreak") %>%
-            arrange(desc(n)) %>%
-            top_n(1000, n)
+            arrange(desc(n))
     })
     output$tablePostOutbreak <- DT::renderDataTable({
         table_df %>%
             filter(CoronaStatus == "PostOutbreak") %>%
-            arrange(desc(n)) %>%
-            top_n( 1000, n)
+            arrange(desc(n))
     })
 }
 
