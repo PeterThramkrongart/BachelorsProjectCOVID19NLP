@@ -75,42 +75,7 @@ tfidf_df <- tfidf_df %>%
 
 ```
 
-
-```{r, tfidf plot}
-tfidf_df %>%
-  group_by(CoronaStatus) %>%
-  top_n(20, tf_idf) %>%
-  ungroup() %>%
-  mutate(CoronaStatus = as.factor(CoronaStatus),
-         lemma = reorder_within(lemma, tf_idf, CoronaStatus)) %>%
-  ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
-  geom_col(show.legend = FALSE) +
-  labs(x = NULL, y = "tf-idf") +
-  facet_wrap( ~ CoronaStatus, scales = "free_y") +
-  coord_flip() +
-  ggtitle("TF-IDF: NER-filtered") +
-  scale_x_reordered() +
-  scale_y_continuous(n.breaks = 3)
-```
-
-```{r, fig.height=5, fig.width=12}
-textLemmasNames <- df %>%
-  drop_na() %>% 
-  filter(ner == "B-PER" | ner == "I-PER") %>% 
-  count(CoronaStatus,lemma, sort = T) %>% 
-  filter(n >= 25)
-
-totalLemmasNames <- textLemmasNames %>% 
-  drop_na() %>% 
-  group_by(CoronaStatus) %>% 
-  summarise(total = sum(n)) 
-
-tfidf_dfNames <- left_join(textLemmasNames,totalLemmasNames)
-
-tfidf_dfNames <- tfidf_dfNames %>% 
-  bind_tf_idf(lemma, CoronaStatus, n)
-
-
+```{r}
 tfidf_df <- tfidf_df %>%
   group_by(CoronaStatus) %>%
   top_n(20, tf_idf) %>%
@@ -131,6 +96,27 @@ tfidf_df %>%
   scale_y_continuous(n.breaks = 3)
 
 ggsave("tfidfNoNames.png", width = 8, height = 5)
+```
+
+
+```{r, fig.height=5, fig.width=12}
+textLemmasNames <- df %>%
+  drop_na() %>% 
+  filter(ner == "B-PER" | ner == "I-PER") %>% 
+  count(CoronaStatus,lemma, sort = T) %>% 
+  filter(n >= 25)
+
+totalLemmasNames <- textLemmasNames %>% 
+  drop_na() %>% 
+  group_by(CoronaStatus) %>% 
+  summarise(total = sum(n)) 
+
+tfidf_dfNames <- left_join(textLemmasNames,totalLemmasNames)
+
+tfidf_dfNames <- tfidf_dfNames %>% 
+  bind_tf_idf(lemma, CoronaStatus, n)
+
+
 
 tfidf_dfNames <- tfidf_dfNames %>%
   group_by(CoronaStatus) %>%
@@ -141,6 +127,9 @@ tfidf_dfNames <- tfidf_dfNames %>%
     lemma = reorder_within(lemma, tf_idf, CoronaStatus)
   )
 
+```
+
+```{r}
 
 tfidf_dfNames %>%
   ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
