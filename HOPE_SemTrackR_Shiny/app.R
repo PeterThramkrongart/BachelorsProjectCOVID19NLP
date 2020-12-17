@@ -1,4 +1,6 @@
 
+
+
 if (!require("pacman"))
     install.packages("pacman")
 
@@ -51,7 +53,10 @@ ui <- fluidPage(
             tabsetPanel(
                 type = "tabs",
                 tabPanel("Names Only", plotOutput("names")),
-                tabPanel("Nouns, verbs, adjectives, and adverbs only", plotOutput("noNames"))
+                tabPanel(
+                    "Nouns, verbs, adjectives, and adverbs only",
+                    plotOutput("noNames")
+                )
             )
         )
         ,
@@ -61,12 +66,17 @@ ui <- fluidPage(
             "This is the SemTrackR Similarity Search Engine.
  It searches for the top 20 words most similar to the search word in each period.
  You can use the search word selector to select a word to search for.
- The words are tagged with their word class. 
+ The words are tagged with their word class.
  The classes are nouns, proper nouns, verbs, adjectives, and adverbs with the tags noun, propn,  verb, adj, and adv respectively.
- The words have been transformed into their dictionary form (lemmatized) and transform to all lowercase. 
+ The words have been transformed into their dictionary form (lemmatized) and transform to all lowercase.
  When searching, the search engine will attempt to find the words that are most similar to the search word.
- If the search word does not appear more than five times in a period, the search cannot be computed for that specific period. 
+ If the search word does not appear more than five times in a period, the search cannot be computed for that specific period.
  \n
+ "
+            ,
+            br(),
+            br(),
+            "
 How do we measure word similarity?
  The meanings of the words are computationally inferred by how often words appear together.
  The argument is that words that tend to appear in the same context must have a similar meaning.
@@ -74,10 +84,18 @@ How do we measure word similarity?
  The mathematical model used for the embeddings used for this search engine is called GloVe-embeddings.
  Each period has its own matrix of vocabulary represented in an embedded matrix.
  The actual search consists of linear algebraic computation called cosine similarity, which calculates the similarity between the search word and each word in a matrix. \n
-DISCLAIMER:
+",
+            br(),
+            br(),
+            "
+    DISCLAIMER:
  GloVe-embeddings need a large amount of data to work properly.
  The embeddings used for this search engine are therefore not trained on enough data to give robust results.
- Use this search engine at your own discretion.\n
+ Use this search engine at your own discretion.\n"
+            ,
+            br(),
+            br(),
+            "
 Some ideas for search words are: sygdom_noun, økonomi_noun, smitte_verb, isolation_noun, and isolere_verb, test_noun
 ",
             br(),
@@ -181,7 +199,7 @@ search_and_plot <-
             coord_flip() +
             facet_wrap(~ CoronaStatus, scales = "free_y") +
             scale_x_reordered() +
-            scale_y_continuous(n.breaks = 5) +
+            scale_y_continuous(n.breaks = 5, limits = c(0,1)) +
             ggtitle(paste("Top", top_n, "words related to:", word)) +
             scale_fill_discrete(drop = TRUE,
                                 limits = factor_levels)
