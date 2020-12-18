@@ -459,7 +459,7 @@ search_and_plot <-
             coord_flip() +
             facet_wrap(~ CoronaStatus, scales = "free_y") +
             scale_x_reordered() +
-            scale_y_continuous(n.breaks = 5) +
+            scale_y_continuous(n.breaks = 5, limits = c(0,1)) +
             ggtitle(paste("Top", top_n, "words related to:", word)) +
             scale_fill_discrete(drop = TRUE,
                                 limits = factor_levels)

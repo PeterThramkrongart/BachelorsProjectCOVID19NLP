@@ -127,7 +127,7 @@ Some ideas for search words are: sygdom_noun, økonomi_noun, smitte_verb, isolat
                     includeHTML("LDAvisModels/baselineLDAvis.html")
                 ),
                 tabPanel(
-                    "During lockdown",
+                    "During first outbreak and lockdown",
                     ## Include new DIV here & Set initial height
                     div(id = "appendhere"),
                     includeHTML("LDAvisModels/outbreakLDAvis.html")
