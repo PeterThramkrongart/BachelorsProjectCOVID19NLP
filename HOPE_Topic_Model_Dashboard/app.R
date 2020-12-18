@@ -73,12 +73,13 @@ ui <- fluidPage(
         
         mainPanel(tabsetPanel(
           type = "tabs",
-          tabPanel("Names Only", plotOutput("names")),
           tabPanel(
             "Nouns, verbs, adjectives, and adverbs only",
-            plotOutput("noNames")
+            plotOutput("noNames")),
+            tabPanel("Names Only",
+                     plotOutput("names"))
           )
-        ))
+        )
       )
     )
     ,
