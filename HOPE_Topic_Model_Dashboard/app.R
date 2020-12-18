@@ -87,8 +87,8 @@ ui <- fluidPage(
       "Topic Models",
       titlePanel("Topic Models"),
       p(strong("What are topic models?")),
-      "Topic models are a type of statistical models for used for discovering and exploring abstract topics that occur in collections of text documents.
- This type of modeling is useful for mapping the contents of collections of text that are too large to read.
+      "Topic models are statistical models used for discovering and exploring abstract topics that occur in collections of text documents.
+ This type of modeling is useful for mapping the contents of collections of text that are too large to read. 
 ",
       br(),
       br(),
@@ -97,7 +97,7 @@ ui <- fluidPage(
  (1) Three tabs to select a period to explore,
  (2) a section to select a specific topic to focus on,
  (3) a two-dimensional representation of how similar topics are to each other called the Intertopic Distance Map,
- (4) a bar chart of the top 30 most relevant words how frequent they appear within the topic and overall,
+ (4) a bar chart of the top 30 most relevant words how frequent they appear within the topic and overall, 
  and (5) a slider to adjust to define how the relevancy of words is determined.
  Use that tabs to select a period to explore.
  Use can either use the topic selection section to pick a topic or you can click on a topic bubble in the Intertopic Distance Map.
@@ -106,10 +106,10 @@ ui <- fluidPage(
  This map also shows how large the topics are.
  The larger the bubble, the more words that belong to this topic.
  When you select a topic,
- you can explore it in the interactive bar chart on the right.
- The words are ordered by how relevant they are to the selected topic.
+ you can explore it in the interactive bar chart on the right. 
+ The words are ordered by how relevant they are to the selected topic.  
  The definition of relevancy can be adjusted on the slider above the chart.
- If the slider is set to 0.0, the chart will emphasize words distinct to the chosen topic,
+ If the slider is set to 0.0, the chart will emphasize words distinct to the chosen topic, 
  If the slider is at 1.0, the chart will emphasize frequent words.
  We recommend starting with the slider at 0.6.
  You can hover the mouse over a specific word in the bar chart,
@@ -118,6 +118,7 @@ ui <- fluidPage(
  It describes how much information a word conveys about a topic.
  You can think of the top-30 most salient words,
  as the 30 overall most important words to describe the topics the period.
+
 
 ",
       br(),
