@@ -1,4 +1,5 @@
 
+
 if (!require("pacman"))
   install.packages("pacman")
 
@@ -75,11 +76,11 @@ ui <- fluidPage(
           type = "tabs",
           tabPanel(
             "Nouns, verbs, adjectives, and adverbs only",
-            plotOutput("noNames")),
-            tabPanel("Names Only",
-                     plotOutput("names"))
-          )
-        )
+            plotOutput("noNames")
+          ),
+          tabPanel("Names Only",
+                   plotOutput("names"))
+        ))
       )
     )
     ,
@@ -88,7 +89,7 @@ ui <- fluidPage(
       titlePanel("Topic Models"),
       p(strong("What are topic models?")),
       "Topic models are statistical models used for discovering and exploring abstract topics that occur in collections of text documents.
- This type of modeling is useful for mapping the contents of collections of text that are too large to read. 
+ This type of modeling is useful for mapping the contents of collections of texts that are too large to read.
 ",
       br(),
       br(),
@@ -97,7 +98,7 @@ ui <- fluidPage(
  (1) Three tabs to select a period to explore,
  (2) a section to select a specific topic to focus on,
  (3) a two-dimensional representation of how similar topics are to each other called the Intertopic Distance Map,
- (4) a bar chart of the top 30 most relevant words how frequent they appear within the topic and overall, 
+ (4) a bar chart of the top 30 most relevant words how frequent they appear within the topic and overall,
  and (5) a slider to adjust to define how the relevancy of words is determined.
  Use that tabs to select a period to explore.
  Use can either use the topic selection section to pick a topic or you can click on a topic bubble in the Intertopic Distance Map.
@@ -106,10 +107,10 @@ ui <- fluidPage(
  This map also shows how large the topics are.
  The larger the bubble, the more words that belong to this topic.
  When you select a topic,
- you can explore it in the interactive bar chart on the right. 
- The words are ordered by how relevant they are to the selected topic.  
+ you can explore it in the interactive bar chart on the right.
+ The words are ordered by how relevant they are to the selected topic.
  The definition of relevancy can be adjusted on the slider above the chart.
- If the slider is set to 0.0, the chart will emphasize words distinct to the chosen topic, 
+ If the slider is set to 0.0, the chart will emphasize words distinct to the chosen topic,
  If the slider is at 1.0, the chart will emphasize frequent words.
  We recommend starting with the slider at 0.6.
  You can hover the mouse over a specific word in the bar chart,
@@ -216,7 +217,7 @@ server <- function(input, output, session) {
       ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
       geom_col(show.legend = FALSE) +
       labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
-      facet_wrap(~ CoronaStatus, scales = "free_y") +
+      facet_wrap( ~ CoronaStatus, scales = "free_y") +
       coord_flip() +
       ggtitle("TF-IDF: Names Only") +
       scale_y_continuous(n.breaks = 3) +
@@ -227,7 +228,7 @@ server <- function(input, output, session) {
       ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
       geom_col(show.legend = FALSE) +
       labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
-      facet_wrap(~ CoronaStatus, scales = "free_y") +
+      facet_wrap( ~ CoronaStatus, scales = "free_y") +
       coord_flip() +
       ggtitle("TF-IDF: Nouns, verbs, adjectives, and adverbs only") +
       scale_x_reordered() +
