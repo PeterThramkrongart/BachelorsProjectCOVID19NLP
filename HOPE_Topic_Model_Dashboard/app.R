@@ -28,7 +28,7 @@ ui <- fluidPage(
         sidebarPanel(
           p(strong("Welcome to the HOPE Topic Models Dashboad.")),
           br(),
-          "This is a tool for exploring how the COVID-19 pandemic has the language used in Danish newspapers.
+          "This is a tool for exploring how the COVID-19 pandemic has influenced the topics in Danish newspapers.
  The models are based on the text from 1898 front pages from Danish mainstream newspapers.
  This includes front pages from Berlingske Tidende, B.T., Ekstrabladet, Information, Jyllands Posten, Politiken, Kristeligt Dagblad, and Weekendavisen.\n
  ",
