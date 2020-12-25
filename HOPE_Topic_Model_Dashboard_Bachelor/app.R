@@ -1,6 +1,7 @@
 
 
 
+
 if (!require("pacman"))
   install.packages("pacman")
 
@@ -20,6 +21,25 @@ ui <- fluidPage(
   # Application title
   theme = shinytheme("cosmo"),
   shinyjs::useShinyjs(),
+  tags$head(
+    HTML(
+      "
+          <script>
+          var socket_timeout_interval
+          var n = 0
+          $(document).on('shiny:connected', function(event) {
+          socket_timeout_interval = setInterval(function(){
+          Shiny.onInputChange('count', n++)
+          }, 15000)
+          });
+          $(document).on('shiny:disconnected', function(event) {
+          clearInterval(socket_timeout_interval)
+          });
+          </script>
+          "
+    )
+  ),
+  textOutput("keepAlive"),
   navbarPage(
     "HOPE - Topic Models Dashboad",
     tabPanel(
@@ -294,7 +314,7 @@ search_and_plot <-
       geom_col(show.legend = FALSE) +
       labs(x = NULL, y = "similarity") +
       coord_flip() +
-      facet_wrap( ~ CoronaStatus, scales = "free_y") +
+      facet_wrap(~ CoronaStatus, scales = "free_y") +
       scale_x_reordered() +
       scale_y_continuous(n.breaks = 5, limits = c(0, 1)) +
       ggtitle(paste("Top-", top_n, " words similar to: ", word, sep = "")) +
@@ -312,7 +332,7 @@ server <- function(input, output, session) {
       ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
       geom_col(show.legend = FALSE) +
       labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
-      facet_wrap(~ CoronaStatus, scales = "free_y") +
+      facet_wrap( ~ CoronaStatus, scales = "free_y") +
       coord_flip() +
       ggtitle("TF-IDF: Names Only") +
       scale_y_continuous(n.breaks = 3) +
@@ -323,7 +343,7 @@ server <- function(input, output, session) {
       ggplot(aes(lemma, tf_idf, fill = CoronaStatus)) +
       geom_col(show.legend = FALSE) +
       labs(x = NULL, y = "Term Frequency–Inverse Document Frequency") +
-      facet_wrap(~ CoronaStatus, scales = "free_y") +
+      facet_wrap( ~ CoronaStatus, scales = "free_y") +
       coord_flip() +
       ggtitle("TF-IDF: Nouns, verbs, adjectives, and adverbs only") +
       scale_x_reordered() +
@@ -371,6 +391,10 @@ server <- function(input, output, session) {
       mutate(word = lemma,
              lemma = NULL,
              TermFrequency = n / sum(n))
+  })
+  output$keepAlive <- renderText({
+    req(input$count)
+    paste("keep alive ", input$count)
   })
 }
 
