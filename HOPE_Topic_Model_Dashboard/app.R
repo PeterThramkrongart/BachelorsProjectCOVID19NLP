@@ -19,6 +19,24 @@ ui <- fluidPage(
   # Application title
   theme = shinytheme("cosmo"),
   shinyjs::useShinyjs(),
+  tags$head(
+    HTML(
+      "
+          <script>
+          var socket_timeout_interval
+          var n = 0
+          $(document).on('shiny:connected', function(event) {
+          socket_timeout_interval = setInterval(function(){
+          Shiny.onInputChange('count', n++)
+          }, 59950)
+          });
+          $(document).on('shiny:disconnected', function(event) {
+          clearInterval(socket_timeout_interval)
+          });
+          </script>
+          "
+    )
+  ),
   navbarPage(
     "HOPE - Topic Models Dashboad",
     tabPanel(
@@ -34,12 +52,13 @@ ui <- fluidPage(
  ",
           br(),
           br(),
-          "The data was gathered from 2019-12-02 to 2020-09-10.
+          " The data was gathered from 02/12/2019 to 10/09/2020.
  The data is divided into 3 distinct periods.
- (1) A baseline period from before COVID-19 reached Denmark (before 2020-02-26),
- (2) an outbreak period (2020-02-28 to 2020-04-12) spanning from the first infection cases in Denmark to the reopening of the first lockdown in Denmark,
- and (3) a post outbreak period (after 2020-04-12) that covers a period after the lockdown.
+ (1) A baseline period from before COVID-19 reached Denmark (before 26/02/2020),
+ (2) an outbreak period (28/02/202 0 to 12/04/2020) spanning from the first infection cases in Denmark to the reopening of the first lockdown in Denmark,
+ and (3) a post-outbreak period (after 12/04/2020) that covers a period after the lockdown.
  Click on the tabs in the top panel to proceed to various models and start exploring!
+
 ",
           width = 6
         ),
@@ -187,7 +206,8 @@ ui <- fluidPage(
         ))
       )
     )
-  )
+  ),
+  textOutput("keepAlive")
 )
 
 
@@ -271,6 +291,12 @@ server <- function(input, output, session) {
              lemma = NULL,
              TermFrequency = n / sum(n))
   })
+  
+  output$keepAlive <- renderText({
+    req(input$count)
+    paste("Minutes active", input$count + 1)
+  })
+  
 }
 
 

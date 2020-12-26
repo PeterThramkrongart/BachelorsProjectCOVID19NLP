@@ -51,11 +51,11 @@ ui <- fluidPage(
  ",
           br(),
           br(),
-          "The data was gathered from 2019-12-02 to 2020-09-10.
+          "The data was gathered from 02/12/2019 to 10/09/2020.
  The data is divided into 3 distinct periods.
- (1) A baseline period from before COVID-19 reached Denmark (before 2020-02-26),
- (2) an outbreak period (2020-02-28 to 2020-04-12) spanning from the first infection cases in Denmark to the reopening of the first lockdown in Denmark,
- and (3) a post outbreak period (after 2020-04-12) that covers a period after the lockdown.
+ (1) A baseline period from before COVID-19 reached Denmark (before 26/02/2020),
+ (2) an outbreak period (28/02/202 0 to 12/04/2020) spanning from the first infection cases in Denmark to the reopening of the first lockdown in Denmark,
+ and (3) a post-outbreak period (after 12/04/2020) that covers a period after the lockdown.
  Click on the tabs in the top panel to proceed to various models and start exploring!
 ",
           width = 6
