@@ -1,7 +1,4 @@
 
-
-
-
 if (!require("pacman"))
   install.packages("pacman")
 
@@ -30,7 +27,7 @@ ui <- fluidPage(
           $(document).on('shiny:connected', function(event) {
           socket_timeout_interval = setInterval(function(){
           Shiny.onInputChange('count', n++)
-          }, 100)
+          }, 59950)
           });
           $(document).on('shiny:disconnected', function(event) {
           clearInterval(socket_timeout_interval)
@@ -39,7 +36,6 @@ ui <- fluidPage(
           "
     )
   ),
-  textOutput("keepAlive"),
   navbarPage(
     "HOPE - Topic Models Dashboad",
     tabPanel(
@@ -259,7 +255,8 @@ Some ideas for search words are: sygdom_noun, økonomi_noun, smitte_verb, isolat
                    label = "Start search engine!"),
       plotOutput("GloVE")
     )
-  )
+  ),
+textOutput("keepAlive")
 )
 
 
@@ -394,7 +391,7 @@ server <- function(input, output, session) {
   })
   output$keepAlive <- renderText({
     req(input$count)
-    paste("keep alive ", input$count)
+    paste("Minutes active", input$count + 1)
   })
 }
 
